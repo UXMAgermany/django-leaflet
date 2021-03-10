@@ -55,6 +55,32 @@
                 simpleshape: {tooltip: {end: "Release mouse to finish drawing."}}
             }
         },
+        edit: {
+            toolbar: {
+                actions: {
+                    save: {title: "Save changes", text: "Save"},
+                    cancel: {
+                        title: "Cancel editing, discards all changes",
+                        text: "Cancel"
+                    },
+                    clearAll: {title: "Clear all layers", text: "Clear All"}
+                },
+                buttons: {
+                    edit: "Edit layers",
+                    editDisabled: "No layers to edit",
+                    remove: "Delete layers",
+                    removeDisabled: "No layers to delete"
+                }
+            },
+            handlers: {
+                edit: {
+                    tooltip: {
+                        text: "Drag handles or markers to edit features.",
+                        subtext: "Click cancel to undo changes."
+                    }
+                }, remove: {tooltip: {text: "Click on a feature to remove."}}
+            }
+        }
     }, L.Draw.Event = {}, L.Draw.Event.CREATED = "draw:created", L.Draw.Event.EDITED = "draw:edited", L.Draw.Event.DELETED = "draw:deleted", L.Draw.Event.DRAWSTART = "draw:drawstart", L.Draw.Event.DRAWSTOP = "draw:drawstop", L.Draw.Event.DRAWVERTEX = "draw:drawvertex", L.Draw.Event.EDITSTART = "draw:editstart", L.Draw.Event.EDITMOVE = "draw:editmove", L.Draw.Event.EDITRESIZE = "draw:editresize", L.Draw.Event.EDITVERTEX = "draw:editvertex", L.Draw.Event.EDITSTOP = "draw:editstop", L.Draw.Event.DELETESTART = "draw:deletestart", L.Draw.Event.DELETESTOP = "draw:deletestop", L.Draw.Event.TOOLBAROPENED = "draw:toolbaropened", L.Draw.Event.TOOLBARCLOSED = "draw:toolbarclosed", L.Draw.Event.MARKERCONTEXT = "draw:markercontext", L.Draw = L.Draw || {}, L.Draw.Feature = L.Handler.extend({
         initialize: function (t, e) {
             this._map = t, this._container = t._container, this._overlayPane = t._panes.overlayPane, this._popupPane = t._panes.popupPane, e && e.shapeOptions && (e.shapeOptions = L.Util.extend({}, this.options.shapeOptions, e.shapeOptions)), L.setOptions(this, e);
@@ -973,7 +999,8 @@
             if (L.version < "0.7") throw new Error("Leaflet.draw 0.2.3+ requires Leaflet 0.7.0+. Download latest from https://github.com/Leaflet/Leaflet/");
             L.Control.prototype.initialize.call(this, t);
             var e;
-            this._toolbars = {}, L.DrawToolbar && this.options.draw && (e = new L.DrawToolbar(this.options.draw), this._toolbars[L.DrawToolbar.TYPE] = e, this._toolbars[L.DrawToolbar.TYPE].on("enable", this._toolbarEnabled, this))},
+            this._toolbars = {}, L.DrawToolbar && this.options.draw && (e = new L.DrawToolbar(this.options.draw), this._toolbars[L.DrawToolbar.TYPE] = e, this._toolbars[L.DrawToolbar.TYPE].on("enable", this._toolbarEnabled, this)), L.EditToolbar && this.options.edit && (e = new L.EditToolbar(this.options.edit), this._toolbars[L.EditToolbar.TYPE] = e, this._toolbars[L.EditToolbar.TYPE].on("enable", this._toolbarEnabled, this)), L.toolbar = this
+        },
         onAdd: function (t) {
             var e, i = L.DomUtil.create("div", "leaflet-draw"), o = !1;
             for (var a in this._toolbars) this._toolbars.hasOwnProperty(a) && (e = this._toolbars[a].addToolbar(t)) && (o || (L.DomUtil.hasClass(e, "leaflet-draw-toolbar-top") || L.DomUtil.addClass(e.childNodes[0], "leaflet-draw-toolbar-top"), o = !0), i.appendChild(e));
